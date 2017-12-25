@@ -1,0 +1,17 @@
+.countChange {
+	display: inline;
+}
+
+.productList{
+	visibility: visible;
+}
+
+.standartList {
+	list-style-type: none;
+	display: inline;
+}
+
+.columnMenu{
+	float: left;
+}
+
