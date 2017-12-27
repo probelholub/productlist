@@ -99,9 +99,9 @@ class Creator extends Component {
   render() {
   	const productList = ['batteryfull.png','lens.png','paintbrush.png','polaroidcamera.png'];
   	let mass = this.state.resultList;
-  	let newmass = mass.map((item) => {
+  	let newmass = mass.map((item, index) => {
 				      return (
-				      	<li key={2} className="resultListLI">
+				      	<li key={index+5} className="resultListLI">
 				      		<div>
 				      			<img src = {'./image/' + item} />
 				      			<button onClick={this.onDelete}>Delete</button>
