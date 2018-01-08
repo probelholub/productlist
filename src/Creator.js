@@ -7,40 +7,18 @@ import lensImg from './image/lens.png';
 import paintImg from './image/paintbrush.png';
 import cameraImg from './image/polaroidcamera.png';
 import ProductItem from './ProductItem';
+import ListImg from './ListImg';
 
-function ProductList(props){
-  const productList = props.productList;
-  const items = productList.map((item) => {
-    const key = getKey(item);
-    return (<li key={key} className="standartList">
-      <button onClick=''>
-        <img src={item} width="64px" heigth="64px" />
-      </button>
-    </li>);
-  });
-  return (<ul className="productList">{items}</ul>);
-}
-
+const prList = [batteryImg, lensImg, paintImg, cameraImg];
 class Creator extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      form: {
-        name: '',
-        price: '',
-        count: 1,
-      },
       productName: '',
       productPrice: '',
       productCount: 1,
-      resultList: [
-        {
-          productName: 'asd',
-          productPrice: '213',
-          id: v4(),
-          count: 1,
-        }
-      ],
+      resultList: [],
       currentImage: moneyImg,
       isOpened: false
     };
@@ -119,8 +97,11 @@ class Creator extends Component {
 
   onSubmit(event){
     let obj = {
-      productName: this.state.productName,
-      productPrice: this.state.productPrice,
+      data:	{
+      	productName: this.state.productName,
+        productPrice: this.state.productPrice,
+        image: this.state.currentImage,
+      },
       count: this.state.productCount,
       id: v4(),
     };
@@ -128,7 +109,12 @@ class Creator extends Component {
       resultList: [
         ...this.state.resultList,
         obj,
-      ]
+      ],
+      productName: '',
+      productPrice: '',
+      productCount: 1,
+      currentImage: moneyImg,
+      isOpened: false,
     })
   }
 
@@ -140,13 +126,25 @@ class Creator extends Component {
     })
   }
 
-  chooseItem(idImg){
-  	this.setState({currentImage: productList.idImg})
+  chooseItem(item){
+  	this.setState({
+  		currentImage: item,
+  		isOpened: !this.state.isOpened,
+  	})
   }
 
   render() {
-  	const productList = [batteryImg, lensImge, paintImg, cameraImg];
-
+  	var listImage
+  	if(this.state.isOpened){
+	  	listImage = prList.map((item) => {
+	  		return (
+	  			<ListImg 
+	  			key={v4()} 
+	  			item={item}
+	  			chooseItem={this.chooseItem} />
+	  			)
+	  	})
+  	}
     const items = this.state.resultList.map((item) => {
       return (
         <ProductItem
@@ -156,48 +154,53 @@ class Creator extends Component {
           onIncrease={this.onItemIncrease}
           onDecrease={this.onItemDecrease}
           onDelete={this.onDelete}
+          data={item.data}
         />
       )
     });
 
     return (
-      <div>
-        <div className="columnMenu">
-          <h2>Add product to your cart list</h2>
-          <p>
-            <input
-              type="text"
-              name="product_name"
-              value={this.state.productName}
-              onChange={this.onProductNameChange}
-              placeholder='Product name...'
-            />
-          </p>
-          <p>
-            <input
-              type="number"
-              name="product_price"
-              value={this.state.productPrice}
-              onChange={this.onProductPriceChange}
-              placeholder='Product price...'
-            />
-          </p>
-          <div>
-            <button onClick={this.onDecrease}>-</button>
-            <label>{this.state.productCount}</label>
-            <button onClick={this.onIncrease}>+</button>
-          </div>
-          <button onClick={this.openedState}>
-            <img src={this.state.currentImage} />
-          </button>
-          <ProductList productList={productList} />
-          <button onClick={this.onSubmit}>Add to Card</button>
-        </div>
-        <div>
-          <h2>Product list</h2>
-          <ul>{items}</ul>
-        </div>
-      </div>
+      <div className="global">
+      	<ul>
+	        <li className="columnMenu">
+	          <h2>Add product to your cart list</h2>
+	          <p>
+	            <input
+	              type="text"
+	              name="product_name"
+	              value={this.state.productName}
+	              onChange={this.onProductNameChange}
+	              placeholder='Product name...'
+	            />
+	          </p>
+	          <p>
+	            <input
+	              type="number"
+	              name="product_price"
+	              value={this.state.productPrice}
+	              onChange={this.onProductPriceChange}
+	              placeholder='Product price...'
+	            />
+	          </p>
+	          <div>
+	            <button onClick={this.onDecrease}>-</button>
+	            <label>{this.state.productCount}</label>
+	            <button onClick={this.onIncrease}>+</button>
+	          </div>
+	          <button onClick={this.openedState}>
+	            <img src={this.state.currentImage} />
+	          </button>
+	          <div>
+	          	<ul className="standartListUL">{listImage}</ul>
+	          </div>
+	          <button onClick={this.onSubmit}>Add to Card</button>
+	        </li>
+		      <li className="columnMenu">
+		        <h2>Product list</h2>
+		        <ul>{items}</ul>
+		      </li>
+	      </ul>
+	    </div>
     )
   }
 }

@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import './Creator.css';
 
 export default class ProductItem extends Component {
   static propTypes = {
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     count: PropTypes.number.isRequired,
     onDecrease: PropTypes.func.isRequired,
     onIncrease: PropTypes.func.isRequired,
     onDelete: PropTypes.func,
     onLinkProduct: PropTypes.func,
+    data: PropTypes.object,
   }
   constructor(props) {
     super(props)
@@ -29,18 +31,28 @@ export default class ProductItem extends Component {
     onDelete(id)
   }
   render() {
-    const { image, count, onLinkProduct } = this.props
+    const { image, count, onLinkProduct, data } = this.props
     const { onDecrease, onIncrease, onDelete } = this
-
+    console.log(data);
     return (
-      <li className="resultListLI">
+      <li className="ProductItemLI">
         <div>
-          <img src={image} />
-          <button onClick={onDelete}>Delete</button>
-          <button onClick={onLinkProduct}>Link</button>
-          <button onClick={onDecrease}>-</button>
-          <label>{count}</label>
-          <button onClick={onIncrease}>+</button>
+          <ul className="ProductItemUL">
+            <li className="resultListLI">
+              <img src={data.image} />
+            </li>
+            <li className="resultListLI">
+              <p>{data.productName}</p>
+              <p>Цена:{data.productPrice}</p>
+              <button onClick={onDecrease}>-</button>
+              <label>{count}</label>
+              <button onClick={onIncrease}>+</button>
+            </li>
+            <li className="resultListLI">
+              <button onClick={onDelete}>Delete</button>
+              <button onClick={onLinkProduct}>Link</button>
+            </li>
+          </ul>
         </div>
       </li>
     )

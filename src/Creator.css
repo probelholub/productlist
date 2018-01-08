@@ -1,3 +1,6 @@
+.global {
+	margin: 0px auto;
+}
 .countChange {
 	display: inline;
 }
@@ -6,12 +9,31 @@
 	visibility: visible;
 }
 
+.standartListUL {
+	margin: 0;
+	padding: 0;
+	-webkit-padding-start: 0;
+}
+
 .standartList {
 	list-style-type: none;
 	display: inline;
 }
 
 .columnMenu{
-	float: left;
+	width: 45%;
+	list-style-type: none;
+	display: inline-block;
+}
+
+.resultListLI{
+	margin: 20px 20px 20px 20px;
+	list-style-type: none;
+	display: inline-block;
+}
+
+.ProductItemLI{
+	text-align: center;
+	list-style-type: none;	
 }
 

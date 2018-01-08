@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { v4 } from 'uuid';
 import './Creator.css';
 
-function getKey(str){
-  let key = 0;
-  for (let i = 0; i < str.length; i++) {
-    key += str.charCodeAt(i);
-  }
-  return key.toString();
-}
-
-export default class listImg extends Component {
+export default class ListImg extends Component {
 	static propTypes = {
-		idImg: PropTypes.number.isRequired,
     item: PropTypes.string.isRequired,
     chooseItem: PropTypes.func,
   }
@@ -22,15 +14,16 @@ export default class listImg extends Component {
   }
 
   chooseItem(){
-  	const { chooseItem, idImg } = this.props
-    chooseItem(idImg)
+  	const { chooseItem, item } = this.props
+    chooseItem(item)
   }
 
   render() {
-		const key = getKey(item);
+    const { item } = this.props
+    const { chooseItem } = this
 		return (
-			<li key={key} className="standartList">
-	      <button onClick=''>
+			<li className="standartList">
+	      <button onClick={chooseItem}>
 	        <img src={item} width="64px" heigth="64px" />
 	      </button>
 	    </li>
