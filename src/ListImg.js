@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { v4 } from 'uuid';
 import './Creator.css';
 
 export default class ListImg extends Component {
@@ -24,7 +23,7 @@ export default class ListImg extends Component {
 		return (
 			<li className="standartList">
 	      <button className="buttonMenu" onClick={chooseItem}>
-	        <img src={item} width="64px" heigth="64px" />
+	        <img src={item} width="64px" heigth="64px" alt='' />
 	      </button>
 	    </li>
 	  );

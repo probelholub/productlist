@@ -8,6 +8,7 @@ import paintImg from './image/paintbrush.png';
 import cameraImg from './image/polaroidcamera.png';
 import ProductItem from './ProductItem';
 import ListImg from './ListImg';
+import LinkItem from './LinkItem';
 
 const prList = [batteryImg, lensImg, paintImg, cameraImg];
 class Creator extends Component {
@@ -22,6 +23,7 @@ class Creator extends Component {
       currentImage: moneyImg,
       isOpened: false,
       isLinkOpened: false,
+      linkedItem: '',
       sum: 0,
     };
 
@@ -33,14 +35,20 @@ class Creator extends Component {
     this.onProductPriceChange = this.onProductPriceChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.onLinkProduct = this.onLinkProduct.bind(this);
+    this.onBack = this.onBack.bind(this);
     this.openedState = this.openedState.bind(this);
+    this.openedLinkState = this.openedLinkState.bind(this);
     this.chooseItem = this.chooseItem.bind(this);
     this.findSum = this.findSum.bind(this);
-    /*this.createResultList = this.createResultList.bind(this);*/
   }
 
   openedState(){
     this.setState({isOpened: !this.state.isOpened});
+  }
+
+  openedLinkState(){
+    this.setState({isLinkOpened: !this.state.isLinkOpened});
   }
 
   onProductNameChange(e){
@@ -129,6 +137,21 @@ class Creator extends Component {
     })
   }
 
+  onLinkProduct(id){
+  	const { resultList } = this.state
+    const rest = resultList.filter((item) => item.id === id)
+  	this.setState({
+  		isLinkOpened: true,
+  		linkedItem: rest,
+  	})
+  }
+
+  onBack(){
+  	this.setState({
+  		isLinkOpened: false,
+  	})
+  }
+
   chooseItem(item){
   	this.setState({
   		currentImage: item,
@@ -147,7 +170,7 @@ class Creator extends Component {
   }
 
   render() {
-  	var listImage
+  	var listImage, items, lItem
   	if(this.state.isOpened){
 	  	listImage = prList.map((item) => {
 	  		return (
@@ -158,19 +181,45 @@ class Creator extends Component {
 	  			)
 	  	})
   	}
-    const items = this.state.resultList.map((item) => {
-      return (
-        <ProductItem
-          key={v4()}
-          id={item.id}
-          count={item.count}
-          onIncrease={this.onItemIncrease}
-          onDecrease={this.onItemDecrease}
-          onDelete={this.onDelete}
-          data={item.data}
-        />
-      )
-    });
+  	if(!this.state.isLinkOpened){
+	    items = this.state.resultList.map((item) => {
+	      return (
+	        <ProductItem
+	          key={v4()}
+	          id={item.id}
+	          count={item.count}
+	          onIncrease={this.onItemIncrease}
+	          onDecrease={this.onItemDecrease}
+	          onDelete={this.onDelete}
+	          onLinkProduct={this.onLinkProduct}
+	          data={item.data}
+	        />
+	      )
+	    })
+  	}else {
+  		/*The solution below doesnt work!!Why?!?!?!?!?!?!?!!?*/
+  		lItem = this.state.linkedItem.map((item) => {
+  			return (
+	  			<LinkItem
+	  				key={v4()}
+	          id={item.id}
+	          count={item.count}
+	          onBack={this.onBack}
+	          data={item.data}
+	  			/>
+  			)
+  		})
+  		/*console.log(this.state.linkedItem)
+  		lItem = (
+  			<LinkItem
+  				key={v4()}
+          id={this.state.linkedItem.id}
+          count={this.state.linkedItem.count}
+          onBack={this.onBack}
+          data={this.state.linkedItem.data}
+  			/>
+  		)*/
+  	}
 
     return (
       <div className="global">
@@ -199,13 +248,13 @@ class Creator extends Component {
 		            />
 		          </p>
 	          </div>
-	          <div>
+	          <p>
 	            <button className="button" onClick={this.onDecrease}>-</button>
-	            <label>{this.state.productCount}</label>
+	            <label> {this.state.productCount} </label>
 	            <button className="button" onClick={this.onIncrease}>+</button>
-	          </div>
+	          </p>
 	          <button className="buttonMenu" onClick={this.openedState}>
-	            <img src={this.state.currentImage} />
+	            <img src={this.state.currentImage} alt='' />
 	          </button>
 	          <div>
 	          	<ul className="standartListUL">{listImage}</ul>
@@ -216,7 +265,8 @@ class Creator extends Component {
 		        <h2>Product list</h2>
 		        <ul>
 		        	{items}
-		        	<li className="ProductItemLI">Final sum: {this.state.sum}</li>
+		        	{lItem}
+		        	<li className="ProductItemLI">Total: {this.state.sum} $</li>
 		        </ul>
 		      </div>
 	      </div>

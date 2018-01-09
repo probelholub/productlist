@@ -17,6 +17,7 @@ export default class ProductItem extends Component {
     this.onDecrease = this.onDecrease.bind(this)
     this.onIncrease = this.onIncrease.bind(this)
     this.onDelete = this.onDelete.bind(this)
+    this.onLinkProduct = this.onLinkProduct.bind(this)
   }
   onDecrease() {
     const { onDecrease, id } = this.props
@@ -30,9 +31,13 @@ export default class ProductItem extends Component {
     const { onDelete, id } = this.props
     onDelete(id)
   }
+  onLinkProduct() {
+    const { onLinkProduct, id } = this.props
+    onLinkProduct(id)
+  }
   render() {
-    const { image, count, onLinkProduct, data } = this.props
-    const { onDecrease, onIncrease, onDelete } = this
+    const { count, data } = this.props
+    const { onDecrease, onIncrease, onDelete, onLinkProduct } = this
     return (
       <li className="ProductItemLI">
         <div className="resultListTable">
@@ -41,9 +46,9 @@ export default class ProductItem extends Component {
             </div>
             <div className="resultListLI">
               <p>{data.productName}</p>
-              <p>Price:{data.productPrice}</p>
+              <p>Price:{data.productPrice} $</p>
               <button className="button" onClick={onDecrease}>-</button>
-              <label>{count}</label>
+              <label> {count} </label>
               <button className="button" onClick={onIncrease}>+</button>
             </div>
             <div className="resultListLI">
