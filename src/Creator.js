@@ -20,7 +20,9 @@ class Creator extends Component {
       productCount: 1,
       resultList: [],
       currentImage: moneyImg,
-      isOpened: false
+      isOpened: false,
+      isLinkOpened: false,
+      sum: 0,
     };
 
     this.onIncrease = this.onIncrease.bind(this);
@@ -33,6 +35,7 @@ class Creator extends Component {
     this.onDelete = this.onDelete.bind(this);
     this.openedState = this.openedState.bind(this);
     this.chooseItem = this.chooseItem.bind(this);
+    this.findSum = this.findSum.bind(this);
     /*this.createResultList = this.createResultList.bind(this);*/
   }
 
@@ -56,7 +59,7 @@ class Creator extends Component {
 
   onDecrease(){
     this.setState(prevState => ({
-      productCount: prevState.productCount - 1
+      productCount: prevState.productCount <= 1 ? 1 : prevState.productCount - 1
     }))
   }
 
@@ -133,6 +136,16 @@ class Creator extends Component {
   	})
   }
 
+  findSum(){
+  	var newSum = 0;
+  	const res = this.state.resultList.slice();
+  	console.log(res, newSum);
+  	for (var i = 0; i < res.length; i++) {
+  		newSum += (parseInt(res[i].productPrice)) * res[i].count;
+  	}
+  	this.setState({sum: newSum})
+  }
+
   render() {
   	var listImage
   	if(this.state.isOpened){
@@ -161,45 +174,52 @@ class Creator extends Component {
 
     return (
       <div className="global">
-      	<ul>
-	        <li className="columnMenu">
+      	<div className="globalTable">
+	        <div className="columnMenu">
 	          <h2>Add product to your cart list</h2>
-	          <p>
-	            <input
-	              type="text"
-	              name="product_name"
-	              value={this.state.productName}
-	              onChange={this.onProductNameChange}
-	              placeholder='Product name...'
-	            />
-	          </p>
-	          <p>
-	            <input
-	              type="number"
-	              name="product_price"
-	              value={this.state.productPrice}
-	              onChange={this.onProductPriceChange}
-	              placeholder='Product price...'
-	            />
-	          </p>
 	          <div>
-	            <button onClick={this.onDecrease}>-</button>
-	            <label>{this.state.productCount}</label>
-	            <button onClick={this.onIncrease}>+</button>
+		          <p>
+		            <input
+		             	className="input"
+		              type="text"
+		              name="product_name"
+		              value={this.state.productName}
+		              onChange={this.onProductNameChange}
+		              placeholder='Product name...'
+		            />
+		          </p>
+		          <p>
+		            <input
+		             	className="input"
+		              type="number"
+		              name="product_price"
+		              value={this.state.productPrice}
+		              onChange={this.onProductPriceChange}
+		              placeholder='Product price...'
+		            />
+		          </p>
 	          </div>
-	          <button onClick={this.openedState}>
+	          <div>
+	            <button className="button" onClick={this.onDecrease}>-</button>
+	            <label>{this.state.productCount}</label>
+	            <button className="button" onClick={this.onIncrease}>+</button>
+	          </div>
+	          <button className="buttonMenu" onClick={this.openedState}>
 	            <img src={this.state.currentImage} />
 	          </button>
 	          <div>
 	          	<ul className="standartListUL">{listImage}</ul>
 	          </div>
-	          <button onClick={this.onSubmit}>Add to Card</button>
-	        </li>
-		      <li className="columnMenu">
+	          <button className="button" onClick={this.onSubmit}>Add to Card</button>
+	        </div>
+		      <div className="columnMenu">
 		        <h2>Product list</h2>
-		        <ul>{items}</ul>
-		      </li>
-	      </ul>
+		        <ul>
+		        	{items}
+		        	<li className="ProductItemLI">Final sum: {this.state.sum}</li>
+		        </ul>
+		      </div>
+	      </div>
 	    </div>
     )
   }

@@ -33,26 +33,23 @@ export default class ProductItem extends Component {
   render() {
     const { image, count, onLinkProduct, data } = this.props
     const { onDecrease, onIncrease, onDelete } = this
-    console.log(data);
     return (
       <li className="ProductItemLI">
-        <div>
-          <ul className="ProductItemUL">
-            <li className="resultListLI">
+        <div className="resultListTable">
+            <div className="resultListLI">
               <img src={data.image} />
-            </li>
-            <li className="resultListLI">
+            </div>
+            <div className="resultListLI">
               <p>{data.productName}</p>
-              <p>Цена:{data.productPrice}</p>
-              <button onClick={onDecrease}>-</button>
+              <p>Price:{data.productPrice}</p>
+              <button className="button" onClick={onDecrease}>-</button>
               <label>{count}</label>
-              <button onClick={onIncrease}>+</button>
-            </li>
-            <li className="resultListLI">
-              <button onClick={onDelete}>Delete</button>
-              <button onClick={onLinkProduct}>Link</button>
-            </li>
-          </ul>
+              <button className="button" onClick={onIncrease}>+</button>
+            </div>
+            <div className="resultListLI">
+              <button className="button" onClick={onDelete}>Delete</button>
+              <button className="button" onClick={onLinkProduct}>Link</button>
+            </div>
         </div>
       </li>
     )

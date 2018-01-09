@@ -23,7 +23,7 @@ export default class ListImg extends Component {
     const { chooseItem } = this
 		return (
 			<li className="standartList">
-	      <button onClick={chooseItem}>
+	      <button className="buttonMenu" onClick={chooseItem}>
 	        <img src={item} width="64px" heigth="64px" />
 	      </button>
 	    </li>
