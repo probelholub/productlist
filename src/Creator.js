@@ -40,6 +40,7 @@ class Creator extends Component {
     this.openedLinkState = this.openedLinkState.bind(this);
     this.chooseItem = this.chooseItem.bind(this);
     this.changeSum = this.changeSum.bind(this);
+    this.disableButton = this.disableButton.bind(this);
   }
   changeSum(){
   	var newSum = 0, a
@@ -168,6 +169,13 @@ class Creator extends Component {
   		isOpened: !this.state.isOpened,
   	})
   }
+  disableButton(){
+  	if (this.state.productName.length > 0 && this.state.productPrice.length > 0) {
+  		return false
+  	} else{
+  		return true
+  	}
+  }
 
   render() {
   	var listImage
@@ -181,6 +189,7 @@ class Creator extends Component {
 	  			)
 	  	})
   	}
+  	const isDisabled = this.disableButton();
 
     return (
       <div className="global">
@@ -220,7 +229,7 @@ class Creator extends Component {
 	          <div>
 	          	<ul className="standartListUL">{listImage}</ul>
 	          </div>
-	          <button className="button" onClick={this.onSubmit}>Add to Card</button>
+	          <button type="button" className="button" disabled={isDisabled} onClick={this.onSubmit}>Add to Card</button>
 	        </div>
 		      <ProductList
 		      	isLinkOpened={this.state.isLinkOpened}
