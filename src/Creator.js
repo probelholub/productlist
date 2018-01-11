@@ -6,9 +6,8 @@ import batteryImg from './image/batteryfull.png';
 import lensImg from './image/lens.png';
 import paintImg from './image/paintbrush.png';
 import cameraImg from './image/polaroidcamera.png';
-import ProductItem from './ProductItem';
+import ProductList from './ProductList';
 import ListImg from './ListImg';
-import LinkItem from './LinkItem';
 
 const prList = [batteryImg, lensImg, paintImg, cameraImg];
 class Creator extends Component {
@@ -23,7 +22,7 @@ class Creator extends Component {
       currentImage: moneyImg,
       isOpened: false,
       isLinkOpened: false,
-      linkedItem: '',
+      linkedItem: [],
       sum: 0,
     };
 
@@ -40,7 +39,18 @@ class Creator extends Component {
     this.openedState = this.openedState.bind(this);
     this.openedLinkState = this.openedLinkState.bind(this);
     this.chooseItem = this.chooseItem.bind(this);
-    /*this.findSum = this.findSum.bind(this);*/
+    this.changeSum = this.changeSum.bind(this);
+  }
+  changeSum(){
+  	var newSum = 0, a
+    const res = this.state.resultList
+    for (var i = 0; i < res.length; i++) {
+      a = Number(res[i].data.productPrice, 10)
+      newSum += a * res[i].count
+    }
+    if (this.state.sum !== newSum) {
+      this.setState({sum: newSum});
+    }
   }
 
   openedState(){
@@ -159,21 +169,20 @@ class Creator extends Component {
   	})
   }
 
-  componentWillMount(){
-  	var newSum = 0;
-  	const res = this.state.resultList;
-  	for (var i = 0; i < res.length; i++) {
-  		var a = Number(res[i].data.productPrice)
-  		newSum += a * res[i].count
-  	}
-  	if (this.state.sum !== newSum) {
-  		this.setState({sum: newSum})
-  	}
+   componentWillReceiveProps(nexProps){
+    const res = this.resultList;
+    console.log(res, this.sum)
+    for (var i = 0; i < res.length; i++) {
+      var a = Number(res[i].data.productPrice)
+      nexProps += a * res[i].count
+    }
+    if (this.props.sum !== nexProps) {
+      this.setState({sum: nexProps})
+    }
   }
 
   render() {
-  	this.componentWillMount();
-  	var listImage, items, lItem
+  	var listImage
   	if(this.state.isOpened){
 	  	listImage = prList.map((item) => {
 	  		return (
@@ -183,45 +192,6 @@ class Creator extends Component {
 	  			chooseItem={this.chooseItem} />
 	  			)
 	  	})
-  	}
-  	if(!this.state.isLinkOpened){
-	    items = this.state.resultList.map((item) => {
-	      return (
-	        <ProductItem
-	          key={v4()}
-	          id={item.id}
-	          count={item.count}
-	          onIncrease={this.onItemIncrease}
-	          onDecrease={this.onItemDecrease}
-	          onDelete={this.onDelete}
-	          onLinkProduct={this.onLinkProduct}
-	          data={item.data}
-	        />
-	      )
-	    })
-  	}else {
-  		/*The solution below doesnt work!!Why?!?!?!?!?!?!?!!?*/
-  		lItem = this.state.linkedItem.map((item) => {
-  			return (
-	  			<LinkItem
-	  				key={v4()}
-	          id={item.id}
-	          count={item.count}
-	          onBack={this.onBack}
-	          data={item.data}
-	  			/>
-  			)
-  		})
-  		/*console.log(this.state.linkedItem)
-  		lItem = (
-  			<LinkItem
-  				key={v4()}
-          id={this.state.linkedItem.id}
-          count={this.state.linkedItem.count}
-          onBack={this.onBack}
-          data={this.state.linkedItem.data}
-  			/>
-  		)*/
   	}
 
     return (
@@ -264,14 +234,18 @@ class Creator extends Component {
 	          </div>
 	          <button className="button" onClick={this.onSubmit}>Add to Card</button>
 	        </div>
-		      <div className="columnMenu">
-		        <h2>Product list</h2>
-		        <ul>
-		        	{items}
-		        	{lItem}
-		        	<li className="ProductItemLI">Total: {this.state.sum} $</li>
-		        </ul>
-		      </div>
+		      <ProductList
+		      	isLinkOpened={this.state.isLinkOpened}
+		      	resultList={this.state.resultList}
+		      	linkedItem={this.state.linkedItem}
+		      	sum={this.state.sum}
+		      	changeSum={this.changeSum}
+		      	onItemIncrease={this.onItemIncrease}
+	          onItemDecrease={this.onItemDecrease}
+	          onDelete={this.onDelete}
+	          onLinkProduct={this.onLinkProduct}
+	          onBack={this.onBack}
+		      />
 	      </div>
 	    </div>
     )

@@ -42,7 +42,7 @@ export default class ProductItem extends Component {
       <li className="ProductItemLI">
         <div className="resultListTable">
             <div className="resultListLI">
-              <img src={data.image} />
+              <img src={data.image} alt="" />
             </div>
             <div className="resultListLI">
               <p>{data.productName}</p>
