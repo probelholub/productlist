@@ -21,6 +21,7 @@ export default class LinkItem extends Component {
   render() {
     const { count, data } = this.props
     const { onBack } = this
+    var sum = data.productPrice * count
     return (
       <div className="ProductItemLI">
       	<h2>{data.productName}</h2>
@@ -29,6 +30,7 @@ export default class LinkItem extends Component {
         </div>
         <p>Price:{data.productPrice} $</p>
         <p>Count:{count} </p>
+        <p>Total item: {sum} $</p>
         <button className="button" onClick={onBack}>Back</button>
       </div>
     )

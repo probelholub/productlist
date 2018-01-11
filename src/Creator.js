@@ -40,7 +40,7 @@ class Creator extends Component {
     this.openedState = this.openedState.bind(this);
     this.openedLinkState = this.openedLinkState.bind(this);
     this.chooseItem = this.chooseItem.bind(this);
-    this.findSum = this.findSum.bind(this);
+    /*this.findSum = this.findSum.bind(this);*/
   }
 
   openedState(){
@@ -159,17 +159,20 @@ class Creator extends Component {
   	})
   }
 
-  findSum(){
+  componentWillMount(){
   	var newSum = 0;
-  	const res = this.state.resultList.slice();
-  	console.log(res, newSum);
+  	const res = this.state.resultList;
   	for (var i = 0; i < res.length; i++) {
-  		newSum += (parseInt(res[i].productPrice)) * res[i].count;
+  		var a = Number(res[i].data.productPrice)
+  		newSum += a * res[i].count
   	}
-  	this.setState({sum: newSum})
+  	if (this.state.sum !== newSum) {
+  		this.setState({sum: newSum})
+  	}
   }
 
   render() {
+  	this.componentWillMount();
   	var listImage, items, lItem
   	if(this.state.isOpened){
 	  	listImage = prList.map((item) => {
