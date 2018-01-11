@@ -169,18 +169,6 @@ class Creator extends Component {
   	})
   }
 
-   componentWillReceiveProps(nexProps){
-    const res = this.resultList;
-    console.log(res, this.sum)
-    for (var i = 0; i < res.length; i++) {
-      var a = Number(res[i].data.productPrice)
-      nexProps += a * res[i].count
-    }
-    if (this.props.sum !== nexProps) {
-      this.setState({sum: nexProps})
-    }
-  }
-
   render() {
   	var listImage
   	if(this.state.isOpened){
