@@ -8,6 +8,8 @@ import paintImg from './image/paintbrush.png';
 import cameraImg from './image/polaroidcamera.png';
 import ProductList from './ProductList';
 import ListImg from './ListImg';
+import * as actionCreators from './actionCreators';
+import { bindActionCreators } from 'redux'
 
 const prList = [batteryImg, lensImg, paintImg, cameraImg];
 class Creator extends Component {
@@ -28,58 +30,59 @@ class Creator extends Component {
     this.openedLinkState = this.openedLinkState.bind(this);
     this.chooseItem = this.chooseItem.bind(this);
     this.changeSum = this.changeSum.bind(this);
-    // this.disableButton = this.disableButton.bind(this);
+    this.disableButton = this.disableButton.bind(this);
   }
   changeSum(){
-    this.props.onChangeSum()
+    this.props.actions.onChangeSum()
   }
   openedState(){
-    this.props.opState()
+    this.props.actions.opState()
   }
   openedLinkState(){
-    this.props.linkState()
+    this.props.actions.linkState()
   }
   onProductNameChange(e){
-    this.props.nameChange(e)
+    this.props.actions.nameChange(e)
   }
   onProductPriceChange(e) {
-    this.props.priceChange(e)
+    this.props.actions.priceChange(e)
   }
   onIncrease(){
-    this.props.increase()
+    this.props.actions.increase()
   }
   onDecrease(){
-    this.props.decrease()
+    this.props.actions.decrease()
   }
   onItemIncrease(id) {
-    this.props.itemIncrease(id)
+    this.props.actions.itemIncrease(id)
   }
   onItemDecrease(id) {
-    this.props.itemDecrease(id)
+    this.props.actions.itemDecrease(id)
   }
   onSubmit(){
-    let obj = {
-      data:	{
-      	productName: this.props.creatorStore.productName,
-        productPrice: this.props.creatorStore.productPrice,
-        image: this.props.creatorStore.currentImage,
+    const { productName, productPrice, currentImage: image, productCount: count } = this.props.creatorStore
+    const obj = {
+      data: {
+        productName,
+        productPrice,
+        image,
       },
-      count: this.props.creatorStore.productCount,
+      count,
       id: v4(),
     }
-    this.props.submit(obj)
+    this.props.actions.submit(obj)
   }
   onDelete(id) {
-    this.props.delete(id)
+    this.props.actions.uninstall(id)
   }
   onLinkProduct(id){
-    this.props.linkProduct(id)
+    this.props.actions.linkProduct(id)
   }
   onBack(){
-    this.props.back()
+    this.props.actions.back()
   }
   chooseItem(item){
-    this.props.onChooseItem(item)
+    this.props.actions.onChooseItem(item)
   }
   disableButton(){
   	if (this.props.creatorStore.productName.length > 0 && this.props.creatorStore.productPrice.length > 0) {
@@ -89,8 +92,18 @@ class Creator extends Component {
   	}
   }
   render() {
+    const {
+      isOpened,
+      resultList,
+      productName,
+      productCount,
+      productPrice,
+      linkedItem,
+      currentImage,
+      isLinkOpened,
+      sum } = this.props.creatorStore
   	var listImage
-  	if(this.props.creatorStore.isOpened){
+  	if(isOpened){
 	  	listImage = prList.map((item) => {
 	  		return (
 	  			<ListImg
@@ -101,7 +114,6 @@ class Creator extends Component {
 	  	})
   	}
   	const isDisabled = this.disableButton();
-    console.log(this.props.creatorStore.resultList);
     return (
       <div className="global">
       	<div className="globalTable">
@@ -113,7 +125,7 @@ class Creator extends Component {
 		             	className="input"
 		              type="text"
 		              name="product_name"
-		              value={this.props.creatorStore.productName}
+		              value={productName}
 		              onChange={this.onProductNameChange}
 		              placeholder='Product name...'
 		            />
@@ -123,7 +135,7 @@ class Creator extends Component {
 		             	className="input"
 		              type="number"
 		              name="product_price"
-		              value={this.props.creatorStore.productPrice}
+		              value={productPrice}
 		              onChange={this.onProductPriceChange}
 		              placeholder='Product price...'
 		            />
@@ -131,11 +143,11 @@ class Creator extends Component {
 	          </div>
 	          <p>
 	            <button className="button" onClick={this.onDecrease}>-</button>
-	            <label> {this.props.creatorStore.productCount} </label>
+	            <label> {productCount} </label>
 	            <button className="button" onClick={this.onIncrease}>+</button>
 	          </p>
 	          <button className="buttonMenu" onClick={this.openedState}>
-	            <img src={this.props.creatorStore.currentImage} alt='' />
+	            <img src={currentImage} alt='' />
 	          </button>
 	          <div>
 	          	<ul className="standartListUL">{listImage}</ul>
@@ -143,10 +155,10 @@ class Creator extends Component {
 	          <button type="button" className="button" disabled={isDisabled} onClick={this.onSubmit}>Add to Card</button>
 	        </div>
 		      <ProductList
-		      	isLinkOpened={this.props.creatorStore.isLinkOpened}
-		      	resultList={this.props.creatorStore.resultList}
-		      	linkedItem={this.props.creatorStore.linkedItem}
-		      	sum={this.props.creatorStore.sum}
+		      	isLinkOpened={isLinkOpened}
+		      	resultList={resultList}
+		      	linkedItem={linkedItem}
+		      	sum={sum}
 		      	changeSum={this.changeSum}
 		      	onItemIncrease={this.onItemIncrease}
 	          onItemDecrease={this.onItemDecrease}
@@ -159,53 +171,10 @@ class Creator extends Component {
     )
   }
 }
-
-export default connect(
-	state => ({
-		creatorStore: state
-	}),
-	dispatch => ({
-		submit: (obj) => {
-			dispatch({ type:'ADD', payload: obj })
-		},
-    delete: (id) => {
-      dispatch({type:'DELETE', payload: id})
-    },
-    onChooseItem: (item) => {
-      dispatch({type: 'CHOOSE', payload: item})
-    },
-    back: () => {
-      dispatch({type: 'BACK'})
-    },
-    linkProduct: (id) => {
-      dispatch({type:'LINK', payload: id})
-    },
-    itemDecrease: (id) => {
-      dispatch({type:'ITEM_DEC', payload: id})
-    },
-    itemIncrease: (id) => {
-      dispatch({type:'ITEM_INC', payload: id})
-    },
-    decrease: (id) => {
-      dispatch({type:'DEC'})
-    },
-    increase: (id) => {
-      dispatch({type:'INC'})
-    },
-    priceChange: (e) => {
-      dispatch({type: 'PRICE', payload: e.target.value})
-    },
-    nameChange: (e) => {
-      dispatch({type: 'NAME', payload: e.target.value})
-    },
-    linkState: () => {
-      dispatch({type: 'LINK_STATE'})
-    },
-    opState: () => {
-      dispatch({type: 'OPEN_STATE'})
-    },
-    onChangeSum: () => {
-      dispatch({type: 'SUM'})
-    },
-	})
-)(Creator);
+function mapStateToProps(state) {
+  return { creatorStore: state }
+}
+function mapDispatchToProps(dispatch) {
+  return { actions: bindActionCreators(actionCreators, dispatch) }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Creator);
